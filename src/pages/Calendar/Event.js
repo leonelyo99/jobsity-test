@@ -39,7 +39,7 @@ const Event = () => {
 
   return (
     <Container>
-      <h3>Events this day: </h3>
+      <h3>Events today: </h3>
       <ul>
         {!!eventsToShow.length ? (
           eventsToShow.map((event, index) => (

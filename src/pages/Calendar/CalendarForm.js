@@ -4,17 +4,27 @@ import "react-calendar/dist/Calendar.css";
 import styled from "styled-components";
 import { useForm } from "../../hooks/useForm";
 
-const CalendarForm = ({ onSubmit, onClose }) => {
-  const [calendarValue, onChangeCalendarValue] = useState(null);
+const CalendarForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
+  const [calendarValue, onChangeCalendarValue] = useState(
+    !!eventToEdit ? new Date(eventToEdit.date) : null
+  );
   const [loading, setLoading] = useState(false);
   const [dateError, setDateError] = useState(false);
   const [cityError, setCityError] = useState(false);
 
-  const [formValues, handleInputChange, reset] = useForm({
-    title: "",
-    city: "",
-    description: "",
-  });
+  const [formValues, handleInputChange, reset] = useForm(
+    !!eventToEdit
+      ? {
+          title: eventToEdit.title,
+          city: eventToEdit.city.name,
+          description: eventToEdit.description,
+        }
+      : {
+          title: "",
+          city: "",
+          description: "",
+        }
+  );
   const { title, city, description } = formValues;
 
   useEffect(() => {
@@ -39,6 +49,7 @@ const CalendarForm = ({ onSubmit, onClose }) => {
     if (matchingCities.length === 0) setCityError(true);
 
     const event = {
+      id: !!eventToEdit ? eventToEdit.id : calendarValue.getTime() + title,
       title,
       city: {
         key: matchingCities[0].Key,
@@ -48,7 +59,11 @@ const CalendarForm = ({ onSubmit, onClose }) => {
       date: calendarValue.getTime(),
     };
 
-    onSubmit(event);
+    if (!!eventToEdit) {
+      onSubmitEdit({ id: eventToEdit.id, ...event });
+    } else {
+      onSubmit(event);
+    }
     handleClose();
   };
 

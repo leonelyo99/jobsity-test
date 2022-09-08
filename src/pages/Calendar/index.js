@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Modal from "react-modal";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setEvents } from "../../actions/events";
+import { editEvent, setEvents } from "../../actions/events";
 import CalendarForm from "./CalendarForm";
 import CalendarComponent from "./Calendar";
 import Event from "./Event";
@@ -24,14 +24,16 @@ function CalendarScreen(props) {
   const dispatch = useDispatch();
   const [calendarModalIsOpen, setCalendarModalIsOpen] = useState(false);
   const [eventListModalIsOpen, setEventListModalIsOpen] = useState(false);
+  const [eventToEdit, setEventToEdit] = useState(null);
   const [eventListToModal, setEventListToModal] = useState();
   const events = useSelector((state) => state.events);
 
-  const openCalendarModal = () => {
+  const handleOpenCalendarModal = () => {
     setCalendarModalIsOpen(true);
   };
 
-  const closeCalendarModal = () => {
+  const handleCloseCalendarModal = () => {
+    !!eventToEdit && setEventToEdit(null);
     setCalendarModalIsOpen(false);
   };
 
@@ -40,7 +42,7 @@ function CalendarScreen(props) {
     setEventListModalIsOpen(true);
   };
 
-  const closeEventListModal = () => {
+  const handleCloseEventListModal = () => {
     setEventListModalIsOpen(false);
   };
 
@@ -48,40 +50,55 @@ function CalendarScreen(props) {
     dispatch(setEvents(formValues));
   };
 
+  const handleSubmitEditForm = (formValues) => {
+    dispatch(editEvent(formValues));
+    setEventToEdit(null);
+  };
+
+  const handleEditEvent = (event) => {
+    console.log(event);
+    setEventToEdit(event);
+    handleOpenCalendarModal();
+  };
+
   return (
     <Container>
       <HeaderContainer>
-        <Button onClick={openCalendarModal}>Add event</Button>
+        <Button onClick={handleOpenCalendarModal}>Add event</Button>
         <Event events={events} />
       </HeaderContainer>
       <CalendarComponent
         events={events}
+        onEditEvent={handleEditEvent}
         onOpenEventListModal={handleOpenEventListModal}
       />
       <Modal
         ariaHideApp={false}
         isOpen={calendarModalIsOpen}
-        onRequestClose={closeCalendarModal}
+        onRequestClose={handleCloseCalendarModal}
         style={customStyles}
         contentLabel="Form event Modal"
       >
         <CalendarForm
           onSubmit={handleSubmitForm}
-          onClose={closeCalendarModal}
+          onSubmitEdit={handleSubmitEditForm}
+          onClose={handleCloseCalendarModal}
+          eventToEdit={eventToEdit}
         />
       </Modal>
 
       <Modal
         ariaHideApp={false}
         isOpen={eventListModalIsOpen}
-        onRequestClose={closeEventListModal}
+        onRequestClose={handleCloseEventListModal}
         style={customStyles}
         contentLabel="Event list Modal"
       >
         <EventList
+          onEventEdit={handleEditEvent}
           events={eventListToModal}
           onSubmit={handleSubmitForm}
-          onClose={closeEventListModal}
+          onClose={handleCloseEventListModal}
         />
       </Modal>
     </Container>
