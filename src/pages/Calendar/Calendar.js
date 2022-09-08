@@ -5,14 +5,13 @@ import ArrowRightIcon from "../../assets/icons/arrow-right-solid.svg";
 import NotificationIcon from "../../assets/icons/circle-exclamation-solid.svg";
 import { getCalendarMonth, getMonthName } from "../../helpers/month";
 
-const CalendarComponent = ({ events }) => {
+const Calendar = ({ events, onOpenEventListModal }) => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [monthNumber, setMonthNumber] = useState(new Date().getMonth());
   const [monthData, setDaysOfTheMonthData] = useState([]);
 
   useEffect(() => {
     setDaysOfTheMonthData(getCalendarMonth(year, monthNumber, events));
-    console.log(monthData);
   }, [monthNumber, year, events]);
 
   const handleChangeYear = (number) => {
@@ -76,7 +75,9 @@ const CalendarComponent = ({ events }) => {
               <NotificationButton
                 src={NotificationIcon}
                 role="button"
-                onClick={() => {}}
+                onClick={() => {
+                  onOpenEventListModal(dayData.events);
+                }}
               />
             )}
           </Day>
@@ -86,7 +87,7 @@ const CalendarComponent = ({ events }) => {
   );
 };
 
-export default CalendarComponent;
+export default Calendar;
 
 const MonthIndicator = styled.div`
   color: #334e68;
@@ -98,6 +99,7 @@ const ArrowButton = styled.img`
   width: 11px;
   cursor: pointer;
   margin-right: 4px;
+  margin-left: 4px;
 `;
 
 const NotificationButton = styled.img`

@@ -1,11 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Modal from "react-modal";
 
 import { useDispatch, useSelector } from "react-redux";
-import CalendarForm from "./CalendarForm";
-import CalendarComponent from "./CalendarComponent";
 import { setEvents } from "../../actions/events";
+import CalendarForm from "./CalendarForm";
+import CalendarComponent from "./Calendar";
+import Event from "./Event";
+import EventList from "./EventList";
 
 const customStyles = {
   content: {
@@ -18,21 +20,28 @@ const customStyles = {
   },
 };
 
-function Calendar(props) {
+function CalendarScreen(props) {
   const dispatch = useDispatch();
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [calendarModalIsOpen, setCalendarModalIsOpen] = useState(false);
+  const [eventListModalIsOpen, setEventListModalIsOpen] = useState(false);
+  const [eventListToModal, setEventListToModal] = useState();
   const events = useSelector((state) => state.events);
 
-  useEffect(() => {
-    console.log(events);
-  }, [events]);
-
-  const openModal = () => {
-    setIsOpen(true);
+  const openCalendarModal = () => {
+    setCalendarModalIsOpen(true);
   };
 
-  const closeModal = () => {
-    setIsOpen(false);
+  const closeCalendarModal = () => {
+    setCalendarModalIsOpen(false);
+  };
+
+  const handleOpenEventListModal = (events) => {
+    setEventListToModal(events);
+    setEventListModalIsOpen(true);
+  };
+
+  const closeEventListModal = () => {
+    setEventListModalIsOpen(false);
   };
 
   const handleSubmitForm = (formValues) => {
@@ -41,22 +50,45 @@ function Calendar(props) {
 
   return (
     <Container>
-      <button onClick={openModal}>Add event</button>
-      <CalendarComponent events={events} />
+      <HeaderContainer>
+        <Button onClick={openCalendarModal}>Add event</Button>
+        <Event events={events} />
+      </HeaderContainer>
+      <CalendarComponent
+        events={events}
+        onOpenEventListModal={handleOpenEventListModal}
+      />
       <Modal
         ariaHideApp={false}
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
+        isOpen={calendarModalIsOpen}
+        onRequestClose={closeCalendarModal}
         style={customStyles}
-        contentLabel="Example Modal"
+        contentLabel="Form event Modal"
       >
-        <CalendarForm onSubmit={handleSubmitForm} onClose={closeModal} />
+        <CalendarForm
+          onSubmit={handleSubmitForm}
+          onClose={closeCalendarModal}
+        />
+      </Modal>
+
+      <Modal
+        ariaHideApp={false}
+        isOpen={eventListModalIsOpen}
+        onRequestClose={closeEventListModal}
+        style={customStyles}
+        contentLabel="Event list Modal"
+      >
+        <EventList
+          events={eventListToModal}
+          onSubmit={handleSubmitForm}
+          onClose={closeEventListModal}
+        />
       </Modal>
     </Container>
   );
 }
 
-export default Calendar;
+export default CalendarScreen;
 
 const Container = styled.main`
   max-width: max-content;
@@ -65,4 +97,13 @@ const Container = styled.main`
   background-color: #fff;
   border: 2px solid #bcccdc;
   border-radius: 8px;
+`;
+
+const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Button = styled.button`
+  height: fit-content;
 `;

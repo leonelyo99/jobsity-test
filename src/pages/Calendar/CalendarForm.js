@@ -40,9 +40,12 @@ const CalendarForm = ({ onSubmit, onClose }) => {
 
     const event = {
       title,
-      city: matchingCities[0].Key,
+      city: {
+        key: matchingCities[0].Key,
+        name: matchingCities[0].EnglishName,
+      },
       description,
-      date: calendarValue,
+      date: calendarValue.getTime(),
     };
 
     onSubmit(event);
@@ -62,8 +65,8 @@ const CalendarForm = ({ onSubmit, onClose }) => {
         `http://dataservice.accuweather.com/locations/v1/cities/search?apikey=RWN8JtSdUhBGDeuew6Vyq5AnusYa3CLH&q=${city}`
       );
       if (response.ok) {
-        const repositories = await response.json();
-        return repositories;
+        const cityData = await response.json();
+        return cityData;
       } else {
       }
     } catch {

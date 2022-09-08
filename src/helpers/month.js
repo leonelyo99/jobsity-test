@@ -16,13 +16,11 @@ export const getFullDate = (year, monthNumber, day) =>
   new Date(year, monthNumber, day).toLocaleString();
 
 export const getDate = (year, monthNumber, day) =>
-  new Date(year, monthNumber, day);
+  new Date(year, monthNumber, day).getTime();
 
 export const setEvents = (monthData, events) => {
   return monthData.map((month) => {
-    const monthsEvents = events.filter(
-      (event) => event.date.getTime() === month.date.getTime()
-    );
+    const monthsEvents = events.filter((event) => event.date === month.date);
     return {
       ...month,
       events: monthsEvents,
