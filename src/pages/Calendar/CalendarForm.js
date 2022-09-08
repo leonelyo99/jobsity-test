@@ -29,7 +29,7 @@ const CalendarForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
 
   useEffect(() => {
     if (!!calendarValue && calendarValue < new Date()) {
-      setDateError(true);
+      setDateError("The date cannot be less or equal than the current date");
     } else {
       setDateError(false);
     }
@@ -37,6 +37,8 @@ const CalendarForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
+    if (!calendarValue) setDateError("You need to set a date for the event");
+
     if (
       title.length <= 1 ||
       city.length <= 1 ||
@@ -132,13 +134,15 @@ const CalendarForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
           aria-label="Description of the event"
         />
         <CalendarContainer>
-          <Calendar onChange={onChangeCalendarValue} value={calendarValue} />
+          <Calendar
+            onChange={(e) => {
+              setDateError(false);
+              onChangeCalendarValue(e);
+            }}
+            value={calendarValue}
+          />
         </CalendarContainer>
-        {dateError && (
-          <ErrorMessage>
-            The date cannot be less or equal than the current date
-          </ErrorMessage>
-        )}
+        {!!dateError && <ErrorMessage>{dateError}</ErrorMessage>}
         <ButtonContainer>
           {loading ? (
             <h3>Loading...</h3>

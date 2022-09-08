@@ -56,7 +56,6 @@ function CalendarScreen(props) {
   };
 
   const handleEditEvent = (event) => {
-    console.log(event);
     setEventToEdit(event);
     handleOpenCalendarModal();
   };
