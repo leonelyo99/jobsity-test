@@ -8,7 +8,7 @@
 Calendar project, allows to add and edit events. The events of the day are displayed at the top along with the temperature of the city of the event.
 The calendar allows you to change the months and years, keeping the events. Since these events are stored in Redux.
 The calendar shows the current date, days of the previous month and the next month. Also the days of the weekend of the current month are shown in another color.
-Technical Debt: Because the development had to be done in 3 days. Functionality and obtaining the "minimum viable product" were prioritized. As a technical debt: the ui of the events form, events list, ui in general should be improved and add propTypes to the components.
+Technical Debt: Because the development had to be done in 3 days. Functionality and obtaining the "minimum viable product" were prioritized. As a technical debt: the ui of the events form, events list and ui in general.
 
 ## How to deploy
 

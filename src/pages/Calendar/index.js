@@ -22,7 +22,7 @@ const customStyles = {
   },
 };
 
-function CalendarScreen(props) {
+function CalendarScreen() {
   const dispatch = useDispatch();
   const [eventListModalIsOpen, setEventListModalIsOpen] = useState(false);
   const [eventToEdit, setEventToEdit] = useState(null);

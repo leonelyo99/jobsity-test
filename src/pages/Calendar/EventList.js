@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import EditIcon from "../../assets/icons/pencil-solid.svg";
@@ -29,6 +30,25 @@ const EventList = ({ events, onClose, onEventEdit }) => {
   );
 };
 
+EventList.propTypes = {
+  events: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      city: PropTypes.shape({
+        key: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+      }),
+      description: PropTypes.string.isRequired,
+      date: PropTypes.number.isRequired,
+    })
+  ),
+  onClose: PropTypes.func.isRequired,
+  onEventEdit: PropTypes.func.isRequired,
+};
+
+export default EventList;
+
 const Container = styled.div`
   & li {
     margin-top: 16px;
@@ -52,4 +72,3 @@ const EditButton = styled.img`
   margin-top: 0px;
   margin-left: 4px;
 `;
-export default EventList;

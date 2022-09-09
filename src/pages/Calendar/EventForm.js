@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 
+import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import "react-calendar/dist/Calendar.css";
@@ -167,6 +168,24 @@ const EventForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
   );
 };
 
+EventForm.propTypes = {
+  eventToEdit: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    city: PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }),
+    description: PropTypes.string.isRequired,
+    date: PropTypes.number.isRequired,
+  }),
+  onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onSubmitEdit: PropTypes.func.isRequired,
+};
+
+export default EventForm;
+
 const CalendarContainer = styled.div`
   margin-top: 8px;
 `;
@@ -190,5 +209,3 @@ const ButtonContainer = styled.div`
   justify-content: end;
   margin-top: 10px;
 `;
-
-export default EventForm;
