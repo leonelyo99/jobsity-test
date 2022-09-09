@@ -4,7 +4,7 @@ import Modal from "react-modal";
 
 import { useDispatch, useSelector } from "react-redux";
 import { editEvent, setEvents } from "../../actions/events";
-import CalendarForm from "./CalendarForm";
+import EventForm from "./EventForm";
 import CalendarComponent from "./Calendar";
 import Event from "./Event";
 import EventList from "./EventList";
@@ -23,23 +23,23 @@ const customStyles = {
 
 function CalendarScreen(props) {
   const dispatch = useDispatch();
-  const [calendarModalIsOpen, setCalendarModalIsOpen] = useState(false);
   const [eventListModalIsOpen, setEventListModalIsOpen] = useState(false);
   const [eventToEdit, setEventToEdit] = useState(null);
-  const [eventListToModal, setEventListToModal] = useState();
+  const [eventFormModalIsOpen, setEventFormModalIsOpen] = useState(false);
+  const [eventListModal, setEventListModal] = useState();
   const events = useSelector((state) => state.events);
 
-  const handleOpenCalendarModal = () => {
-    setCalendarModalIsOpen(true);
+  const handleOpenEventFormModal = () => {
+    setEventFormModalIsOpen(true);
   };
 
-  const handleCloseCalendarModal = () => {
+  const handleCloseEventFormModal = () => {
     !!eventToEdit && setEventToEdit(null);
-    setCalendarModalIsOpen(false);
+    setEventFormModalIsOpen(false);
   };
 
   const handleOpenEventListModal = (events) => {
-    setEventListToModal(events);
+    setEventListModal(events);
     setEventListModalIsOpen(true);
   };
 
@@ -58,13 +58,13 @@ function CalendarScreen(props) {
 
   const handleEditEvent = (event) => {
     setEventToEdit(event);
-    handleOpenCalendarModal();
+    handleOpenEventFormModal();
   };
 
   return (
     <Container>
       <HeaderContainer>
-        <Button onClick={handleOpenCalendarModal}>Add event</Button>
+        <Button onClick={handleOpenEventFormModal}>Add event</Button>
         <Event events={events} />
       </HeaderContainer>
       <CalendarComponent
@@ -74,15 +74,15 @@ function CalendarScreen(props) {
       />
       <Modal
         ariaHideApp={false}
-        isOpen={calendarModalIsOpen}
-        onRequestClose={handleCloseCalendarModal}
+        isOpen={eventFormModalIsOpen}
+        onRequestClose={handleCloseEventFormModal}
         style={customStyles}
         contentLabel="Form event Modal"
       >
-        <CalendarForm
+        <EventForm
           onSubmit={handleSubmitForm}
           onSubmitEdit={handleSubmitEditForm}
-          onClose={handleCloseCalendarModal}
+          onClose={handleCloseEventFormModal}
           eventToEdit={eventToEdit}
         />
       </Modal>
@@ -96,7 +96,7 @@ function CalendarScreen(props) {
       >
         <EventList
           onEventEdit={handleEditEvent}
-          events={eventListToModal}
+          events={eventListModal}
           onSubmit={handleSubmitForm}
           onClose={handleCloseEventListModal}
         />
@@ -125,24 +125,3 @@ const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-
-// const Button = styled.button`
-//   height: fit-content;
-//   cursor: pointer;
-//   align-items: center;
-//   background-color: ${(props) =>
-//     props.secondary ? "rgb(47, 116, 181)" : "#FF4742"};
-//   border: 2px solid rgb(47, 116, 181);
-//   padding: 4px 8px 4px 8px;
-//   color: #fff;
-//   font-weight: 600;
-//   outline: 0;
-//   text-align: center;
-//   text-decoration: none;
-//   transition: all 0.3s;
-
-//   &:hover {
-//     background-color: rgb(34 92 147);
-//     border-color: rgb(34 92 147);
-//   }
-// `;

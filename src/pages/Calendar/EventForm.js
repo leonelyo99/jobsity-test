@@ -2,15 +2,16 @@ import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import styled from "styled-components";
+import Button from "../../components/Button";
 import { useForm } from "../../hooks/useForm";
 
-const CalendarForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
+const EventForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
   const [calendarValue, onChangeCalendarValue] = useState(
     !!eventToEdit ? new Date(eventToEdit.date) : null
   );
   const [loading, setLoading] = useState(false);
   const [dateError, setDateError] = useState(false);
-  const [cityError, setCityError] = useState(false);
+  const [cityError, setCityError] = useState(null);
 
   const [formValues, handleInputChange, reset] = useForm(
     !!eventToEdit
@@ -28,7 +29,7 @@ const CalendarForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
   const { title, city, description } = formValues;
 
   useEffect(() => {
-    if (!!calendarValue && calendarValue < new Date()) {
+    if (!!calendarValue && calendarValue < new Date().setHours(0, 0, 0, 0)) {
       setDateError("The date cannot be less or equal than the current date");
     } else {
       setDateError(false);
@@ -48,7 +49,7 @@ const CalendarForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
       return;
     const matchingCities = await fetchCity(city);
 
-    if (matchingCities.length === 0) setCityError(true);
+    if (matchingCities.length === 0) setCityError("The city was not found");
 
     const event = {
       id: !!eventToEdit ? eventToEdit.id : calendarValue.getTime() + title,
@@ -79,15 +80,16 @@ const CalendarForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://dataservice.accuweather.com/locations/v1/cities/search?apikey=RWN8JtSdUhBGDeuew6Vyq5AnusYa3CLH&q=${city}`
+        `http://dataservice.accuweather.com/locations/v1/cities/search?apikey=${process.env.REACT_APP_API_KEY}&q=${city}`
       );
       if (response.ok) {
         const cityData = await response.json();
         return cityData;
       } else {
+        setCityError("Something happened, please try again later");
       }
     } catch {
-      // TODO: add error handling
+      setCityError("Something happened, please try again later");
     } finally {
       setLoading(false);
     }
@@ -116,12 +118,12 @@ const CalendarForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
           placeholder="City"
           value={city}
           onChange={(e) => {
-            setCityError(false);
+            setCityError(null);
             handleInputChange(e);
           }}
           aria-label="City of the event"
         />
-        {cityError && <ErrorMessage>The city was not found</ErrorMessage>}
+        {!!cityError && <ErrorMessage>{cityError}</ErrorMessage>}
         <br />
         <Textarea
           maxLength={30}
@@ -148,8 +150,12 @@ const CalendarForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
             <h3>Loading...</h3>
           ) : (
             <>
-              <Button type="submit">Add</Button>
-              <Button onClick={handleClose}>Cancel</Button>
+              <Button type="submit" marginRight={10}>
+                Add
+              </Button>
+              <Button onClick={handleClose} secondary>
+                Cancel
+              </Button>
             </>
           )}
         </ButtonContainer>
@@ -160,10 +166,6 @@ const CalendarForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
 
 const CalendarContainer = styled.div`
   margin-top: 8px;
-
-  * {
-    margin-top: 0px;
-  }
 `;
 
 const Input = styled.input`
@@ -183,11 +185,7 @@ const ErrorMessage = styled.span`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: end;
-`;
-
-const Button = styled.button`
-  margin-left: 10px;
   margin-top: 10px;
 `;
 
-export default CalendarForm;
+export default EventForm;

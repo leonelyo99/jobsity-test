@@ -43,6 +43,8 @@ export const getCalendarMonth = (year, monthNumber, events) => {
       fullDate: getFullDate(year, monthNumber, day),
       isCurrentMonth: true,
       isWeekend: weekday === 0 || weekday === 6,
+      isToday:
+        new Date().setHours(0, 0, 0, 0) === getDate(year, monthNumber, day),
     });
   }
 
@@ -62,6 +64,7 @@ export const getCalendarMonth = (year, monthNumber, events) => {
       fullDate: getFullDate(year, monthNumber - 1, previousDay),
       isCurrentMonth: false,
       isWeekend: weekday === 0 || weekday === 6,
+      isToday: false,
     });
   }
 
@@ -88,6 +91,7 @@ export const getCalendarMonth = (year, monthNumber, events) => {
         fullDate: getFullDate(year, monthNumber + 1, dayOfTheNextMonth),
         isCurrentMonth: false,
         isWeekend: weekday === 0 || weekday === 6,
+        isToday: false,
       });
     }
   }

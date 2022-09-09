@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import EditIcon from "../../assets/icons/pencil-solid.svg";
+import Button from "../../components/Button";
 
 const EventList = ({ events, onClose, onEventEdit }) => {
   return (
@@ -30,7 +31,10 @@ const EventList = ({ events, onClose, onEventEdit }) => {
 };
 
 const Container = styled.div`
-  margin-top: 0px;
+  & li {
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
 
   & li {
     display: flex;
@@ -41,11 +45,6 @@ const Container = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: end;
-`;
-
-const Button = styled.button`
-  margin-left: 10px;
-  margin-top: 10px;
 `;
 
 const EditButton = styled.img`

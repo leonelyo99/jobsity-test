@@ -6,6 +6,7 @@ const Event = () => {
   const events = useSelector((state) => state.events);
   const [eventsToShow, setEventsToShow] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [weatherError, setWeatherError] = useState(null);
 
   useEffect(async () => {
     const todayEvents = [];
@@ -21,24 +22,26 @@ const Event = () => {
 
   const fetchCityWeather = async (cityKey) => {
     setLoading(true);
+    setWeatherError(null);
     try {
       const response = await fetch(
-        `http://dataservice.accuweather.com/forecasts/v1/daily/1day/${cityKey}?apikey=RWN8JtSdUhBGDeuew6Vyq5AnusYa3CLH`
+        `http://dataservice.accuweather.com/forecasts/v1/daily/1day/${cityKey}?apikey=${process.env.REACT_APP_API_KEY}`
       );
       if (response.ok) {
         const weather = await response.json();
         return weather.DailyForecasts[0];
       } else {
+        setWeatherError("Something happened, please try again later");
       }
     } catch {
-      // TODO: add error handling
+      setWeatherError("Something happened, please try again later");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Container>
+    <div>
       <h3>Events today: </h3>
       <ul>
         {!!eventsToShow.length ? (
@@ -51,7 +54,7 @@ const Event = () => {
           <h4>You have no events this day</h4>
         )}
       </ul>
-      {!!eventsToShow.length && (
+      {!!eventsToShow.length && !weatherError ? (
         <>
           <h3>Weather for your events are: </h3>
           <ul>
@@ -69,13 +72,11 @@ const Event = () => {
             })}
           </ul>
         </>
+      ) : (
+        <h4>{weatherError}</h4>
       )}
-    </Container>
+    </div>
   );
 };
-
-const Container = styled.div`
-  margin-top: 0px;
-`;
 
 export default Event;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import ArrowLeftIcon from "../../assets/icons/arrow-left-solid.svg";
 import ArrowRightIcon from "../../assets/icons/arrow-right-solid.svg";
@@ -8,11 +8,11 @@ import { getCalendarMonth, getMonthName } from "../../helpers/month";
 const Calendar = ({ events, onOpenEventListModal }) => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [monthNumber, setMonthNumber] = useState(new Date().getMonth());
-  const [monthData, setDaysOfTheMonthData] = useState([]);
 
-  useEffect(() => {
-    setDaysOfTheMonthData(getCalendarMonth(year, monthNumber, events));
-  }, [monthNumber, year, events]);
+  const monthData = useMemo(
+    () => getCalendarMonth(year, monthNumber, events),
+    [monthNumber, year, events]
+  );
 
   const handleChangeYear = (number) => {
     setYear((prevYear) => prevYear + number);
@@ -69,6 +69,7 @@ const Calendar = ({ events, onOpenEventListModal }) => {
             key={index}
             isWeekend={dayData.isWeekend}
             isCurrentMonth={dayData.isCurrentMonth}
+            isToday={dayData.isToday}
           >
             <Time dateTime={dayData.fullDate}>{dayData.dayNumber}</Time>
             {!!dayData.events.length && (
@@ -120,14 +121,12 @@ const DayOfTheWeekContainer = styled.div`
     color: white;
     font-weight: 500;
     text-align: center;
-    margin-top: 0px;
   }
 `;
 
 const DateGridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  margin-top: 0px;
   border-left: 0.5px solid rgb(194, 194, 194);
   border-right: 0.5px solid rgb(194, 194, 194);
   border-bottom: 0.5px solid rgb(194, 194, 194);
@@ -138,13 +137,16 @@ const Day = styled.button`
   justify-content: space-between;
   font-size: 1rem;
   position: relative;
-  margin-top: 0px;
   margin-left: 0px;
   border: 0.5px solid rgb(194, 194, 194);
   width: 7vw;
   height: 7vw;
   background-color: ${(props) =>
-    props.isWeekend ? "rgb(242, 242, 242)" : "#FFF"};
+    props.isWeekend
+      ? "rgb(242, 242, 242)"
+      : props.isToday
+      ? "rgb(213 234 255)"
+      : "#FFF"};
   color: ${(props) =>
     props.isWeekend && props.isCurrentMonth
       ? "rgb(47, 116, 181)"
