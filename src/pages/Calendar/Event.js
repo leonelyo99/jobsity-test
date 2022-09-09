@@ -49,7 +49,7 @@ const Event = () => {
       <ul>
         {!!eventsToShow.length ? (
           eventsToShow.map((event, index) => (
-            <li>
+            <li key={`${index}-event`}>
               <h4 key={`${index}-${event.title}`}>{event.title}</h4>
             </li>
           ))

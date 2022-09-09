@@ -8,21 +8,19 @@ const EventList = ({ events, onClose, onEventEdit }) => {
     <Container>
       <h3>Events this day: </h3>
       <ul>
-        {events.map((event, index) => {
-          return (
-            <li key={`${index}-${event.title}`}>
-              <h4>{event.title}</h4>
-              <EditButton
-                src={EditIcon}
-                role="button"
-                onClick={() => {
-                  onEventEdit(event);
-                  onClose();
-                }}
-              />
-            </li>
-          );
-        })}
+        {events.map((event, index) => (
+          <li key={`${index}-${event.title}`}>
+            <h4>{event.title}</h4>
+            <EditButton
+              src={EditIcon}
+              role="button"
+              onClick={() => {
+                onEventEdit(event);
+                onClose();
+              }}
+            />
+          </li>
+        ))}
       </ul>
       <ButtonContainer>
         <Button onClick={onClose}>Close Modal</Button>

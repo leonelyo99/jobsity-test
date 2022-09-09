@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 
+import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import ArrowLeftIcon from "../../assets/icons/arrow-left-solid.svg";
@@ -68,7 +69,7 @@ const Calendar = ({ events, onOpenEventListModal }) => {
       <DateGridContainer>
         {monthData.map((dayData, index) => (
           <Day
-            key={index}
+            key={`${index}-calendar-day`}
             isWeekend={dayData.isWeekend}
             isCurrentMonth={dayData.isCurrentMonth}
             isToday={dayData.isToday}
@@ -88,6 +89,22 @@ const Calendar = ({ events, onOpenEventListModal }) => {
       </DateGridContainer>
     </>
   );
+};
+
+Calendar.propTypes = {
+  events: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      city: PropTypes.shape({
+        key: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+      }),
+      description: PropTypes.string.isRequired,
+      date: PropTypes.number.isRequired,
+    })
+  ).isRequired,
+  onOpenEventListModal: PropTypes.func.isRequired,
 };
 
 export default Calendar;
