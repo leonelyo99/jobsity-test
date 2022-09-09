@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
 import Modal from "react-modal";
-
 import { useDispatch, useSelector } from "react-redux";
+
+import styled from "styled-components";
+
 import { editEvent, setEvents } from "../../actions/events";
-import EventForm from "./EventForm";
+import Button from "../../components/Button";
 import CalendarComponent from "./Calendar";
 import Event from "./Event";
+import EventForm from "./EventForm";
 import EventList from "./EventList";
-import Button from "../../components/Button";
 
 const customStyles = {
   content: {

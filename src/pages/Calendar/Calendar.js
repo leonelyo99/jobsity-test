@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from "react";
+
 import styled from "styled-components";
+
 import ArrowLeftIcon from "../../assets/icons/arrow-left-solid.svg";
 import ArrowRightIcon from "../../assets/icons/arrow-right-solid.svg";
 import NotificationIcon from "../../assets/icons/circle-exclamation-solid.svg";
@@ -142,9 +144,9 @@ const Day = styled.button`
   width: 7vw;
   height: 7vw;
   background-color: ${(props) =>
-    props.isWeekend
+    props.isWeekend && !props.isToday
       ? "rgb(242, 242, 242)"
-      : props.isToday
+      : !props.isWeekend && props.isToday
       ? "rgb(213 234 255)"
       : "#FFF"};
   color: ${(props) =>

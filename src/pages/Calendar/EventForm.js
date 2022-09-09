@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
+
 import styled from "styled-components";
+
+import "react-calendar/dist/Calendar.css";
+
 import Button from "../../components/Button";
 import { useForm } from "../../hooks/useForm";
 
