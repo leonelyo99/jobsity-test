@@ -8,6 +8,7 @@ import CalendarForm from "./CalendarForm";
 import CalendarComponent from "./Calendar";
 import Event from "./Event";
 import EventList from "./EventList";
+import Button from "../../components/Button";
 
 const customStyles = {
   content: {
@@ -113,6 +114,11 @@ const Container = styled.main`
   background-color: #fff;
   border: 2px solid #bcccdc;
   border-radius: 8px;
+
+  * {
+    font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
+      sans-serif;
+  }
 `;
 
 const HeaderContainer = styled.div`
@@ -120,6 +126,23 @@ const HeaderContainer = styled.div`
   justify-content: space-between;
 `;
 
-const Button = styled.button`
-  height: fit-content;
-`;
+// const Button = styled.button`
+//   height: fit-content;
+//   cursor: pointer;
+//   align-items: center;
+//   background-color: ${(props) =>
+//     props.secondary ? "rgb(47, 116, 181)" : "#FF4742"};
+//   border: 2px solid rgb(47, 116, 181);
+//   padding: 4px 8px 4px 8px;
+//   color: #fff;
+//   font-weight: 600;
+//   outline: 0;
+//   text-align: center;
+//   text-decoration: none;
+//   transition: all 0.3s;
+
+//   &:hover {
+//     background-color: rgb(34 92 147);
+//     border-color: rgb(34 92 147);
+//   }
+// `;
