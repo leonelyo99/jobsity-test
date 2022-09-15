@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+
 import { eventsReducer } from "./eventsReducer";
 
 const reducers = {
