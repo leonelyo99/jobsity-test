@@ -51,7 +51,7 @@ const EventForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
       !calendarValue
     )
       return;
-    const matchingCities = await fetchCity(city);
+    const matchingCities = await getCity(city);
 
     if (matchingCities.length === 0) setCityError("The city was not found");
 
@@ -80,7 +80,7 @@ const EventForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
     onClose();
   };
 
-  const fetchCity = async (city) => {
+  const getCity = async (city) => {
     setLoading(true);
     try {
       const response = await fetch(

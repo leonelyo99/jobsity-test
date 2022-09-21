@@ -14,7 +14,7 @@ const Event = () => {
 
       for (let i = 0; i < events.length; i++) {
         if (events[i].date === todayDate) {
-          const weather = await fetchCityWeather(events[i].city.key);
+          const weather = await getCityWeather(events[i].city.key);
           todayEvents.push({ ...events[i], weather });
         }
       }
@@ -23,7 +23,7 @@ const Event = () => {
     fetchData();
   }, [events]);
 
-  const fetchCityWeather = async (cityKey) => {
+  const getCityWeather = async (cityKey) => {
     setLoading(true);
     setWeatherError(null);
     try {
