@@ -163,7 +163,7 @@ const Day = styled.button`
   background-color: ${(props) =>
     props.isWeekend && !props.isToday
       ? "rgb(242, 242, 242)"
-      : !props.isWeekend && props.isToday
+      : props.isToday
       ? "rgb(213 234 255)"
       : "#FFF"};
   color: ${(props) =>
