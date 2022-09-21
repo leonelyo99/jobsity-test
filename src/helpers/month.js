@@ -19,10 +19,10 @@ export const getDate = (year, monthNumber, day) =>
   new Date(year, monthNumber, day).getTime();
 
 export const setEvents = (monthData, events) => {
-  return monthData.map((month) => {
-    const monthsEvents = events.filter((event) => event.date === month.date);
+  return monthData.map((day) => {
+    const monthsEvents = events.filter((event) => event.date === day.date);
     return {
-      ...month,
+      ...day,
       events: monthsEvents,
     };
   });
@@ -68,16 +68,15 @@ export const getCalendarMonth = (year, monthNumber, events) => {
     });
   }
 
-  // add the days of the next month
-  const numberOfDaysOfNextMonth =
-    monthData.length > 35 && monthData.length < 40
-      ? 42 - monthData.length
-      : 35 - monthData.length;
-
   if (
-    (monthData.length > 35 && monthData.length < 40) ||
+    (monthData.length > 35 && monthData.length < 42) ||
     monthData.length < 35
   ) {
+    // add the days of the next month
+    const numberOfDaysOfNextMonth =
+      monthData.length > 35 && monthData.length < 42
+        ? 42 - monthData.length
+        : 35 - monthData.length;
     for (
       let dayOfTheNextMonth = 1;
       dayOfTheNextMonth <= numberOfDaysOfNextMonth;
