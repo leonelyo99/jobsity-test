@@ -34,7 +34,7 @@ const EventForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
 
   useEffect(() => {
     if (!!calendarValue && calendarValue < new Date().setHours(0, 0, 0, 0)) {
-      setDateError("The date cannot be less or equal than the current date");
+      setDateError("The date cannot be less than the current date");
     } else {
       setDateError(false);
     }
