@@ -68,15 +68,19 @@ export const getCalendarMonth = (year, monthNumber, events) => {
     });
   }
 
+  const normalCalendar = 35;
+  const extendedCalendar = 42;
+
   if (
-    (monthData.length > 35 && monthData.length < 42) ||
-    monthData.length < 35
+    (monthData.length > normalCalendar &&
+      monthData.length < extendedCalendar) ||
+    monthData.length < normalCalendar
   ) {
     // add the days of the next month
     const numberOfDaysOfNextMonth =
-      monthData.length > 35 && monthData.length < 42
-        ? 42 - monthData.length
-        : 35 - monthData.length;
+      monthData.length > normalCalendar && monthData.length < extendedCalendar
+        ? extendedCalendar - monthData.length
+        : normalCalendar - monthData.length;
     for (
       let dayOfTheNextMonth = 1;
       dayOfTheNextMonth <= numberOfDaysOfNextMonth;

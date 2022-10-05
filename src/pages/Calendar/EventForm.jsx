@@ -14,46 +14,53 @@ const EventForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
     !!eventToEdit ? new Date(eventToEdit.date) : null
   );
   const [loading, setLoading] = useState(false);
-  const [dateError, setDateError] = useState(false);
-  const [cityError, setCityError] = useState(null);
 
-  const [formValues, handleInputChange, reset] = useForm(
-    !!eventToEdit
-      ? {
-          title: eventToEdit.title,
-          city: eventToEdit.city.name,
-          description: eventToEdit.description,
-        }
-      : {
-          title: "",
-          city: "",
-          description: "",
-        }
-  );
+  const initialFormState = !!eventToEdit
+    ? {
+        title: eventToEdit.title,
+        city: eventToEdit.city.name,
+        description: eventToEdit.description,
+      }
+    : {
+        title: "",
+        city: "",
+        description: "",
+      };
+
+  const initialFormErrorsState = {
+    titleError: null,
+    cityError: null,
+    descriptionError: null,
+    dateError: null,
+  };
+
+  const [formValues, formErrors, handleInputChange, handleErrorChange, reset] =
+    useForm(initialFormState, initialFormErrorsState);
   const { title, city, description } = formValues;
+  const { titleError, cityError, descriptionError, dateError } = formErrors;
 
   useEffect(() => {
     if (!!calendarValue && calendarValue < new Date().setHours(0, 0, 0, 0)) {
-      setDateError("The date cannot be less than the current date");
+      handleErrorChange({
+        dateError: "The date cannot be less than the current date",
+      });
     } else {
-      setDateError(false);
+      handleErrorChange({ dateError: null });
     }
   }, [calendarValue]);
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
-    if (!calendarValue) setDateError("You need to set a date for the event");
 
-    if (
-      title.length <= 1 ||
-      city.length <= 1 ||
-      description.length <= 1 ||
-      !calendarValue
-    )
-      return;
+    const hasAnError = handleErrorForm();
+    if (hasAnError) return;
+
     const matchingCities = await getCity(city);
 
-    if (matchingCities.length === 0) setCityError("The city was not found");
+    if (matchingCities.length === 0) {
+      handleErrorChange({ cityError: "The city was not found" });
+      return;
+    }
 
     const event = {
       id: !!eventToEdit ? eventToEdit.id : calendarValue.getTime() + title,
@@ -74,6 +81,34 @@ const EventForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
     handleClose();
   };
 
+  const handleErrorForm = () => {
+    let hasAnError = false;
+    if (!calendarValue) {
+      hasAnError = true;
+      handleErrorChange({ dateError: "You need to set a date for the event" });
+    }
+    if (title.length < 1) {
+      hasAnError = true;
+      handleErrorChange({
+        titleError: "You need to set a title for the event",
+      });
+    }
+    if (city.length < 1) {
+      hasAnError = true;
+      handleErrorChange({
+        cityError: "You need to set a city for the event",
+      });
+    }
+    if (description.length < 1) {
+      hasAnError = true;
+      handleErrorChange({
+        descriptionError: "You need to set a description for the event",
+      });
+    }
+
+    return hasAnError;
+  };
+
   const handleClose = () => {
     onChangeCalendarValue(null);
     reset();
@@ -90,10 +125,14 @@ const EventForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
         const cityData = await response.json();
         return cityData;
       } else {
-        setCityError("Something happened, please try again later");
+        handleErrorChange({
+          cityError: "Something happened, please try again later",
+        });
       }
     } catch {
-      setCityError("Something happened, please try again later");
+      handleErrorChange({
+        cityError: "Something happened, please try again later",
+      });
     } finally {
       setLoading(false);
     }
@@ -110,9 +149,15 @@ const EventForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
           placeholder="Title"
           name="title"
           value={title}
-          onChange={handleInputChange}
+          onChange={(e) => {
+            handleErrorChange({
+              titleError: null,
+            });
+            handleInputChange(e);
+          }}
           aria-label="Title of the event"
         />
+        {!!titleError && <ErrorMessage>{titleError}</ErrorMessage>}
         <br />
         <Input
           maxLength={30}
@@ -122,7 +167,7 @@ const EventForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
           placeholder="City"
           value={city}
           onChange={(e) => {
-            setCityError(null);
+            handleErrorChange({ cityError: null });
             handleInputChange(e);
           }}
           aria-label="City of the event"
@@ -135,14 +180,20 @@ const EventForm = ({ onSubmit, onSubmitEdit, onClose, eventToEdit }) => {
           type="textarea"
           name="description"
           value={description}
-          onChange={handleInputChange}
+          onChange={(e) => {
+            handleErrorChange({ descriptionError: null });
+            handleInputChange(e);
+          }}
           placeholder="Description"
           aria-label="Description of the event"
         />
+        {!!descriptionError && <ErrorMessage>{descriptionError}</ErrorMessage>}
         <CalendarContainer>
           <Calendar
             onChange={(e) => {
-              setDateError(false);
+              handleErrorChange({
+                dateError: null,
+              });
               onChangeCalendarValue(e);
             }}
             value={calendarValue}

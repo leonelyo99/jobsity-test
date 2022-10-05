@@ -1,7 +1,11 @@
-import Calendar from "./Calendar";
+import Readme from "../components/Readme";
 
 function App() {
-  return <Calendar />;
+  return (
+    <div>
+      <Readme />
+    </div>
+  );
 }
 
 export default App;
